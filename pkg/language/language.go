@@ -32,6 +32,10 @@ func WithDetection(config Config) heartbeat.HandleOption {
 					continue
 				}
 
+				if h.EntityType != heartbeat.FileType {
+					continue
+				}
+
 				filepath := h.Entity
 
 				if h.LocalFile != "" {

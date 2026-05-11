@@ -49,6 +49,41 @@ func TestWithDetection(t *testing.T) {
 	}, result)
 }
 
+func TestWithDetection_AppType(t *testing.T) {
+	opt := language.WithDetection(language.Config{})
+
+	h := opt(func(_ context.Context, hh []heartbeat.Heartbeat) ([]heartbeat.Result, error) {
+		assert.Len(t, hh, 1)
+		assert.Nil(t, hh[0].Language)
+		assert.Equal(t, []heartbeat.Heartbeat{
+			{
+				Entity:     "Claude project.io",
+				EntityType: heartbeat.AppType,
+			},
+		}, hh)
+
+		return []heartbeat.Result{
+			{
+				Status: 201,
+			},
+		}, nil
+	})
+
+	result, err := h(t.Context(), []heartbeat.Heartbeat{
+		{
+			Entity:     "Claude project.io",
+			EntityType: heartbeat.AppType,
+		},
+	})
+	require.NoError(t, err)
+
+	assert.Equal(t, []heartbeat.Result{
+		{
+			Status: 201,
+		},
+	}, result)
+}
+
 func TestWithDetection_Override(t *testing.T) {
 	opt := language.WithDetection(language.Config{})
 
